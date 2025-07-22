@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Data Statistik | Satu Data Desa Kelurahan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body class="bg-gray-50">
+
+<header class="bg-white shadow sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <!-- Logo dihapus di sini -->
+            <span class="text-xl font-bold text-gray-800">Data Statistik</span>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl mx-auto">
+        <div class="grid md:grid-cols-3 min-h-[400px]">
+            <div class="border-r p-4">
+                <h3 class="text-lg font-semibold text-blue-700 mb-4">Sub Menu</h3>
+                <ul id="menuList" class="space-y-2"></ul>
+            </div>
+            <div class="md:col-span-2 p-4">
+                <input type="text" id="searchStatistik" placeholder="Cari file statistik..." class="border px-3 py-2 rounded w-full mb-4">
+                <div id="uploadFormBox"></div>
+                <div id="fileList"></div>
+                <div id="tablePreview"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='js/statistik.js') }}"></script>
+</body>
+</html>

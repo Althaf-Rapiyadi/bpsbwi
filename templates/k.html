@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satu Data Desa Kelurahan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="k.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body class="bg-gray-50">
+
+<!-- Header -->
+<header class="bg-white shadow sticky top-0 z-40">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between py-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                    <i class="fas fa-chart-bar text-white text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-gray-800">BPS Kabupaten Banyuwangi</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#beranda" class="text-gray-700 hover:text-blue-600 font-medium">Beranda</a>
+                <a href="#statistik" class="text-gray-700 hover:text-blue-600 font-medium">Statistik</a>
+                <a href="#kontak" class="text-gray-700 hover:text-blue-600 font-medium">Kontak</a>
+            </nav>
+            <button class="md:hidden text-gray-700" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
+        <div class="container mx-auto px-4 py-4 space-y-2">
+            <a href="#beranda" class="block text-gray-700 hover:text-blue-600 py-2">Beranda</a>
+            <a href="#statistik" class="block text-gray-700 hover:text-blue-600 py-2">Statistik</a>
+            <a href="#kontak" class="block text-gray-700 hover:text-blue-600 py-2">Kontak</a>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section id="beranda" class="bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400 text-white py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl md:text-6xl font-bold mb-4">SIADEK CANTIK BANYUWANGI</h2>
+        <p class="text-lg md:text-2xl mb-2 opacity-90">Satu Data Indonesia Desa/Kelurahan Cinta Statistik Kabupaten Banyuwangi</p>
+    </div>
+</section>
+
+<!-- Statistik Overview (modifikasi sesuai gambar) -->
+<section class="py-10 bg-white border-b">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Jumlah Penduduk -->
+            <!-- Jumlah Desa dan Kelurahan di Banyuwangi -->
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                    <!-- Ganti ikon sesuai kebutuhan. Ini contoh ikon peta. -->
+                    <i class="fas fa-map-marked-alt text-blue-600 text-3xl"></i>
+                    <!-- Jika mau pakai gambar: -->
+                    <!-- <img src="LINK_GAMBAR_BANYUWANGI" alt="Geografi Banyuwangi" class="w-12 h-12" /> -->
+                </div>
+                <div class="bg-white border rounded-xl shadow text-3xl md:text-4xl font-extrabold tracking-tight px-7 py-2 mb-1 text-gray-800 select-none" style="letter-spacing:0.01em">
+                    217
+                </div>
+                <div class="text-base md:text-lg text-gray-700 mt-1">
+                    Jumlah Desa dan Kelurahan 
+                </div>
+            </div>
+
+            <!-- Pertumbuhan Ekonomi -->
+            <div class="flex flex-col items-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                <i class="fas fa-home text-green-600 text-2xl mr-1"></i>
+                <i class="fas fa-mountain text-green-600 text-2xl"></i>
+            </div>
+            <div class="bg-white border rounded-xl shadow text-3xl md:text-4xl font-extrabold tracking-tight px-7 py-2 mb-1 text-gray-800 select-none" style="letter-spacing:0.01em">
+                189
+            </div>
+            <div class="text-base md:text-lg text-gray-700 mt-1">
+                Jumlah Desa
+            </div>
+        </div>
+
+            <!-- Angka Melek Huruf -->
+            <div class="flex flex-col items-center">
+                <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-building text-yellow-600 text-3xl"></i>
+                </div>
+                <div class="bg-white border rounded-xl shadow text-3xl md:text-4xl font-extrabold tracking-tight px-7 py-2 mb-1 text-gray-800 select-none" style="letter-spacing:0.01em">
+                    28
+                </div>
+                <div class="text-base md:text-lg text-gray-700 mt-1">
+                    Jumlah Kelurahan
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Akses Data Statistik: LINK -->
+<section class="py-10 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col items-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Akses Data Statistik</h2>
+            <a href="statistik.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto justify-center" style="display: inline-flex;">
+                <i class="fas fa-database text-xl"></i>
+                Satu Data Desa Kelurahan
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- PROFIL DESA: LINK -->
+<section id="profilkecamatan" class="py-10 bg-white border-t">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Profil Desa</h2>
+        <a href="publikasi.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto justify-center" style="display: inline-flex;">
+            <i class="fas fa-map-marker-alt text-xl"></i>
+            Lihat Publikasi Profil Desa 
+        </a>
+    </div>
+</section>
+
+<!-- KONTAK -->
+<section id="kontak" class="py-14 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Hubungi Kami</h2>
+            <p class="text-gray-600 text-lg">Badan Pusat Statistika Banyuwangi</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div>
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Alamat</h3>
+                            <p class="text-gray-600">Jl. K.H. Agus Salim No.87, Lingkungan Cuking Rw., Mojopanggung, Kec. Banyuwangi, Kabupaten Banyuwangi, Jawa Timur 68425</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Telepon</h3>
+                            <p class="text-gray-600">(62-333) 421774</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-envelope text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Email</h3>
+                            <p class="text-gray-600">bps3510@bps.go.id</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+    </div>
+</section>
+
+<script src="k.js"></script>
+</body>
+</html>

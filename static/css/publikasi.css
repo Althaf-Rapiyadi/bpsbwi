@@ -1,0 +1,7 @@
+.pub-list::-webkit-scrollbar { width: 8px; }
+.pub-list::-webkit-scrollbar-track { background: transparent; }
+.pub-list::-webkit-scrollbar-thumb { background-color: #3b82f6; border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+.modal-bg { background: rgba(0,0,0,0.3);}
+@media (max-width: 600px) {
+  .modal-form { max-width: 98vw !important; padding: 1rem !important; }
+}

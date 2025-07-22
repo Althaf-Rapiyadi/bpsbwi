@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satu Data Desa Kelurahan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    .card-hover { transition:.2s; }
+    .card-hover:hover { transform:translateY(-5px); box-shadow:0 8px 18px -3px #0002; }
+    .modal-bg { background: rgba(0,0,0,0.3);}
+    .pub-list::-webkit-scrollbar { width: 8px; }
+    .pub-list::-webkit-scrollbar-track { background: transparent; }
+    .pub-list::-webkit-scrollbar-thumb { background-color: #3b82f6; border-radius: 10px; border: 2px solid transparent; background-clip: content-box; }
+    @media (max-width: 600px) {
+      .modal-form { max-width: 98vw !important; padding: 1rem !important; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Header -->
+<header class="bg-white shadow sticky top-0 z-40">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between py-4">
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+          <i class="fas fa-chart-bar text-white text-xl"></i>
+        </div>
+        <h1 class="text-xl font-bold text-gray-800">Satu Data Desa Kelurahan</h1>
+      </div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#" onclick="showSection('home')" class="text-gray-700 hover:text-blue-600 font-medium">Beranda</a>
+        <a href="#" onclick="showSection('statistik')" class="text-gray-700 hover:text-blue-600 font-medium">Statistik</a>
+        <a href="#" onclick="showSection('desa')" class="text-gray-700 hover:text-blue-600 font-medium">Profil Desa</a>
+        <a href="#" onclick="showSection('pedoman')" class="text-gray-700 hover:text-blue-600 font-medium">Pedoman</a>
+        <a href="#kontak" class="text-gray-700 hover:text-blue-600 font-medium">Kontak</a>
+      </nav>
+      <button class="md:hidden text-gray-700" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
+    <div class="container mx-auto px-4 py-4 space-y-2">
+      <a href="#" onclick="showSection('home')" class="block text-gray-700 hover:text-blue-600 py-2">Beranda</a>
+      <a href="#" onclick="showSection('statistik')" class="block text-gray-700 hover:text-blue-600 py-2">Statistik</a>
+      <a href="#" onclick="showSection('desa')" class="block text-gray-700 hover:text-blue-600 py-2">Profil Desa</a>
+      <a href="#" onclick="showSection('pedoman')" class="block text-gray-700 hover:text-blue-600 py-2">Pedoman</a>
+      <a href="#kontak" class="block text-gray-700 hover:text-blue-600 py-2">Kontak</a>
+    </div>
+  </div>
+</header>
+
+<!-- HOME -->
+<section id="section_home">
+  <section class="bg-gradient-to-br from-blue-900 via-blue-600 to-blue-400 text-white py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl md:text-6xl font-bold mb-4">Satu Data Desa Kelurahan</h2>
+      <p class="text-lg md:text-2xl mb-2 opacity-90">Portal statistik & data terintegrasi Banyuwangi</p>
+    </div>
+  </section>
+  <section class="py-10 bg-white border-b">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-users text-blue-600 text-xl"></i>
+          </div>
+          <input id="statPenduduk" type="text" class="text-2xl font-bold text-center text-gray-800 mb-1 w-24 bg-gray-50 rounded-lg border focus:border-blue-500" value="1.560.000">
+          <p class="text-gray-600 text-sm">Jumlah Penduduk</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+          </div>
+          <input id="statEkonomi" type="text" class="text-2xl font-bold text-center text-gray-800 mb-1 w-20 bg-gray-50 rounded-lg border focus:border-green-400" value="4.2%">
+          <p class="text-gray-600 text-sm">Pertumbuhan Ekonomi</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-graduation-cap text-yellow-600 text-xl"></i>
+          </div>
+          <input id="statMelek" type="text" class="text-2xl font-bold text-center text-gray-800 mb-1 w-20 bg-gray-50 rounded-lg border focus:border-yellow-400" value="95.8%">
+          <p class="text-gray-600 text-sm">Angka Melek Huruf</p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-seedling text-purple-600 text-xl"></i>
+          </div>
+          <input id="statPertanian" type="text" class="text-2xl font-bold text-center text-gray-800 mb-1 w-20 bg-gray-50 rounded-lg border focus:border-purple-400" value="42.3%">
+          <p class="text-gray-600 text-sm">Sektor Pertanian</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-10 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+        <button onclick="showSection('statistik')" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <i class="fas fa-database text-xl"></i> Akses Data Statistik
+        </button>
+        <button onclick="showSection('desa')" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center gap-2">
+          <i class="fas fa-map-marker-alt text-xl"></i> Profil Desa
+        </button>
+        <button onclick="showSection('pedoman')" class="bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors flex items-center gap-2">
+          <i class="fas fa-book text-xl"></i> Pedoman
+        </button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- STATISTIK -->
+<section id="section_statistik" class="hidden">
+  <section class="py-10 flex justify-center min-h-[80vh]">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl overflow-y-auto" style="padding-bottom:40px;">
+      <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
+        <div class="flex items-center gap-2">
+          <img src="https://www.bps.go.id/favicon.ico" class="w-8 h-8" alt="Logo">
+          <span class="text-xl font-bold text-gray-800">Satu Data Statistik</span>
+        </div>
+        <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-700" title="Kembali"><i class="fas fa-arrow-left text-xl"></i></button>
+      </div>
+      <div class="grid md:grid-cols-3 min-h-[400px]">
+        <div class="border-r p-4">
+          <h3 class="text-lg font-semibold text-blue-700 mb-4">Sub Menu</h3>
+          <ul id="menuList" class="space-y-2"></ul>
+        </div>
+        <div class="md:col-span-2 p-4">
+          <input type="text" id="searchStatistik" placeholder="Cari file statistik..." class="border px-3 py-2 rounded w-full mb-4">
+          <div id="submenuContent" class="min-h-[250px]"></div>
+          <div id="tablePreview" class="mt-6"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- PROFIL DESA -->
+<section id="section_desa" class="hidden">
+  <section class="py-10 flex justify-center min-h-[80vh]">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl overflow-y-auto" style="padding-bottom:40px;">
+      <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-map-marker-alt text-blue-700 text-2xl"></i>
+          <span class="text-xl font-bold text-gray-800">Profil Desa</span>
+        </div>
+        <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-700" title="Kembali"><i class="fas fa-arrow-left text-xl"></i></button>
+      </div>
+      <div class="p-4">
+        <div class="flex flex-col md:flex-row gap-4 items-center mb-4">
+          <input id="keywordDesa" type="text" placeholder="Cari judul..." class="border px-3 py-2 rounded w-full md:w-60">
+          <input id="yearDesa" type="text" placeholder="Tahun" class="border px-3 py-2 rounded w-full md:w-32">
+          <button onclick="openModal('desa')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"><i class="fas fa-plus"></i> Tambah</button>
+        </div>
+        <div id="pubListDesa"></div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- PEDOMAN -->
+<section id="section_pedoman" class="hidden">
+  <section class="py-10 flex justify-center min-h-[80vh]">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl overflow-y-auto" style="padding-bottom:40px;">
+      <div class="flex justify-between items-center px-6 py-4 border-b sticky top-0 bg-white z-10">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-book text-yellow-700 text-2xl"></i>
+          <span class="text-xl font-bold text-gray-800">Pedoman</span>
+        </div>
+        <button onclick="showSection('home')" class="text-gray-500 hover:text-blue-700" title="Kembali"><i class="fas fa-arrow-left text-xl"></i></button>
+      </div>
+      <div class="p-4">
+        <div class="flex flex-col md:flex-row gap-4 items-center mb-4">
+          <input id="keywordPedoman" type="text" placeholder="Cari judul..." class="border px-3 py-2 rounded w-full md:w-60">
+          <input id="yearPedoman" type="text" placeholder="Tahun" class="border px-3 py-2 rounded w-full md:w-32">
+          <button onclick="openModal('pedoman')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"><i class="fas fa-plus"></i> Tambah</button>
+        </div>
+        <div id="pubListPedoman"></div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- MODAL ADD/EDIT PUBLIKASI -->
+<div id="modalPub" class="fixed inset-0 z-50 flex items-center justify-center modal-bg hidden">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full modal-form relative overflow-y-auto max-h-[90vh]">
+    <button type="button" class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl" onclick="closeModal()">&times;</button>
+    <h2 id="modalTitle" class="text-xl font-bold mb-4">Tambah Data</h2>
+    <form id="pubForm" class="flex flex-col gap-4 pb-32" autocomplete="off">
+      <input type="hidden" id="pubId" />
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Judul</label>
+        <input id="pubTitle" required class="w-full px-3 py-2 border border-gray-300 rounded-md" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Tanggal Publikasi</label>
+        <input id="pubDate" type="date" required class="w-full px-3 py-2 border border-gray-300 rounded-md" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Tahun</label>
+        <input id="pubYear" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Contoh: 2024">
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Deskripsi <span class="text-gray-400 text-xs">(opsional)</span></label>
+        <textarea id="pubDesc" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md"></textarea>
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Gambar Cover (opsional, jpg/png)</label>
+        <input id="pubImg" type="file" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white" />
+        <img id="previewImg" src="" alt="" class="hidden mt-2 max-h-32 rounded border" />
+      </div>
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Unggah Dokumen Publikasi <span class="text-red-500">*</span> (pdf/doc/xls/zip)</label>
+        <input id="pubDoc" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" required class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white" />
+        <span id="docName" class="block text-blue-600 font-medium text-sm mt-2 break-all"></span>
+      </div>
+      <button type="submit" id="btnSimpan" class="bg-blue-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-blue-700 mt-2">Simpan</button>
+      <span id="errorMsg" class="block text-red-500 text-sm mt-2"></span>
+    </form>
+  </div>
+</div>
+
+<!-- KONTAK -->
+<section id="kontak" class="py-14 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Hubungi Kami</h2>
+      <p class="text-gray-600 text-lg">Kami siap membantu kebutuhan data statistik Anda</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div>
+        <div class="space-y-6">
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-map-marker-alt text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Alamat</h3>
+              <p class="text-gray-600">Jl. A. Yani No. 123, Banyuwangi, Jawa Timur 68416</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-phone text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Telepon</h3>
+              <p class="text-gray-600">(0333) 421234</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-4">
+            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i class="fas fa-envelope text-purple-600 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800 mb-2">Email</h3>
+              <p class="text-gray-600">bps3518@bps.go.id</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </div>
+</section>
+<footer class="bg-gray-200 p-4 text-center text-gray-600 text-sm mt-10">
+  &copy; 2025 Badan Pusat Statistik Kabupaten Banyuwangi
+</footer>
+
+<script>
+// SPA Navigation
+function showSection(section) {
+  ['home','statistik','desa','pedoman'].forEach(s=>{
+    document.getElementById('section_'+s).classList.add('hidden');
+  });
+  document.getElementById('section_'+section).classList.remove('hidden');
+  if(section === 'statistik') {
+    renderMenuList();
+    renderSubmenuContent(currentSubmenu);
+  }
+  if(section === 'desa') renderListDesa();
+  if(section === 'pedoman') renderListPedoman();
+}
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+['statPenduduk', 'statEkonomi', 'statMelek', 'statPertanian'].forEach(id => {
+  const inp = document.getElementById(id);
+  inp.value = localStorage.getItem(id) || inp.value;
+  inp.addEventListener('change', function() { localStorage.setItem(id, this.value); });
+});
+
+// --- STATISTIK (CRUD, File, Komentar, Keterangan Tabel, Pagination) ---
+const submenus = [
+  "Keterangan Umum Wilayah","Kependudukan dan Ketenagakerjaan","Perumahan dan Lingkungan Hidup","Bencana Alam dan Mitigasi Bencana Alam",
+  "Pendidikan","Kesehatan","Sosial Budaya","Olahraga dan Hiburan","Angkutan, Komunikasi, dan Informasi",
+  "Perekonomian dan Aset Wilayah","Keamanan","Aparatur Pemerintahan","Perlindungan Sosial, Pembangunan, dan Pemberdayaan Masyarakat"
+];
+let fileData = JSON.parse(localStorage.getItem("statistik_data")||'{}');
+let currentSubmenu = submenus[0];
+function renderMenuList() {
+  let html = "";
+  submenus.forEach((sm, i) => {
+    html += `<li>
+      <button onclick="renderSubmenuContent('${sm.replace(/'/g,"\\'")}')" class="block w-full text-left px-2 py-2 rounded hover:bg-blue-50 text-gray-800 font-medium${sm==currentSubmenu?' border border-black':''}">${sm}</button>
+    </li>`;
+  });
+  document.getElementById('menuList').innerHTML = html;
+}
+function renderSubmenuContent(submenu) {
+  currentSubmenu = submenu;
+  let data = fileData[submenu] || [];
+  let filter = (document.getElementById('searchStatistik')?.value || "").toLowerCase();
+  let filtered = filter ? data.filter(f => (f.nama||"").toLowerCase().includes(filter)) : data;
+  let html = `
+    <div class="mb-4">
+      <span class="text-xl font-bold text-blue-700">${submenu}</span>
+      <form onsubmit="return uploadCsvExcelOrLink(event, '${submenu.replace(/'/g,"\\'")}')" class="mt-4 flex flex-col md:flex-row gap-2">
+        <select id="uploadType" class="border px-2 py-1 rounded bg-white">
+          <option value="file">Pilih File</option>
+          <option value="link">Pilih Link</option>
+        </select>
+        <input type="file" accept=".csv,.xlsx,.xls" class="border px-2 py-1 rounded bg-white" id="fileInput" style="display:block;">
+        <input type="url" placeholder="Tempel link file/data/website" class="border px-2 py-1 rounded bg-white" id="linkInput" style="display:none;">
+        <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">Upload</button>
+      </form>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full border rounded bg-white text-sm shadow">
+        <thead>
+          <tr class="bg-blue-100 text-blue-700">
+            <th class="py-2 px-3 text-left">Nama File</th>
+            <th class="py-2 px-3 text-left">Terakhir Diperbarui</th>
+            <th class="py-2 px-3"></th>
+          </tr>
+        </thead>
+        <tbody>`;
+  if (filtered.length === 0) {
+    html += `<tr><td colspan="3" class="py-6 text-center text-gray-500">Belum ada file</td></tr>`;
+  } else {
+    filtered.forEach((f, i) => {
+      let isFileData = (f.type && ['csv','xlsx','xls'].includes(f.type));
+      let isFileUpload = !!f.file;
+      html += `<tr class="border-t">
+        <td class="py-2 px-3 flex items-center gap-2">` +
+        (isFileData ?
+          `<a href="#" class="text-blue-700 hover:underline" onclick="previewTable('${submenu.replace(/'/g,"\\'")}',${data.indexOf(f)});return false;">${f.nama}</a>`
+        :
+          `<a href="${f.link}" class="text-blue-700 hover:underline" target="_blank" rel="noopener">${f.nama}</a>`
+        ) +
+        (isFileUpload ? `<a href="${f.link}" download="${f.nama}" title="Download" class="text-blue-500 hover:text-blue-800 ml-2"><i class="fas fa-download"></i></a>` : ""
+        ) +
+        `</td>
+        <td class="py-2 px-3">${f.updated}</td>
+        <td class="py-2 px-3 text-right">
+          <button onclick="hapusFileStatistik('${submenu.replace(/'/g,"\\'")}',${data.indexOf(f)})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+    });
+  }
+  html += `</tbody></table></div>`;
+  document.getElementById('submenuContent').innerHTML = html;
+  document.getElementById('tablePreview').innerHTML = '';
+  setTimeout(() => {
+    document.getElementById('uploadType').onchange = function() {
+      let tipe = this.value;
+      document.getElementById('fileInput').style.display = tipe === "file" ? "block" : "none";
+      document.getElementById('linkInput').style.display = tipe === "link" ? "block" : "none";
+    };
+  }, 100);
+}
+function uploadCsvExcelOrLink(e, submenu) {
+  e.preventDefault();
+  let tipe = document.getElementById('uploadType').value;
+  let now = new Date().toLocaleString("id-ID");
+  fileData[submenu] = fileData[submenu] || [];
+  let nama = "";
+  if (tipe === "file") {
+    let fileInput = document.getElementById('fileInput');
+    let file = fileInput.files[0];
+    if (!file) return false;
+    let link = URL.createObjectURL(file);
+    nama = file.name;
+    toBase64(file).then((base64)=>{
+      fileData[submenu].push({ link, nama, updated: now, type: file.name.split('.').pop().toLowerCase(), file: base64 });
+      localStorage.setItem('statistik_data',JSON.stringify(fileData));
+      renderSubmenuContent(submenu);
+    });
+    fileInput.value = "";
+  } else {
+    let link = document.getElementById('linkInput').value;
+    if (!link) return false;
+    let ext = (link.split('.').pop().split('?')[0] || '').toLowerCase();
+    nama = link.split('/').pop().split('?')[0];
+    fileData[submenu].push({ link, nama, updated: now, type: ext, file: null });
+    localStorage.setItem('statistik_data',JSON.stringify(fileData));
+    document.getElementById('linkInput').value = "";
+    renderSubmenuContent(submenu);
+  }
+  return false;
+}
+function hapusFileStatistik(submenu, idx) {
+  fileData[submenu].splice(idx, 1);
+  localStorage.setItem('statistik_data',JSON.stringify(fileData));
+  renderSubmenuContent(submenu);
+  document.getElementById('tablePreview').innerHTML = "";
+}
+
+// --- PREVIEW TABEL + KETERANGAN + KOMENTAR ---
+function previewTable(submenu, idx) {
+  let fileObj = fileData[submenu][idx];
+  let ext = (fileObj.type||"").toLowerCase();
+  let previewDiv = document.getElementById('tablePreview');
+  previewDiv.innerHTML = "<div class='text-gray-500 text-sm mb-2'>Memuat tabel...</div>";
+  let keteranganKey = `statistik_keterangan_${submenu}_${idx}`;
+  let fileKeterangan = localStorage.getItem(keteranganKey) || '';
+
+  function keteranganEditor() {
+    return `
+    <div class="bg-yellow-50 border border-yellow-200 rounded p-3 mt-4 flex items-start justify-between gap-3">
+      <div>
+        <div class="font-semibold text-yellow-800 mb-1">Keterangan Tabel</div>
+        <div class="text-sm text-gray-700" id="fileKeteranganText">${fileKeterangan || '<span class="italic text-gray-400">Belum ada keterangan</span>'}</div>
+      </div>
+      <button onclick="editFileKeterangan('${submenu}',${idx})" class="ml-2 px-2 py-1 rounded text-xs bg-yellow-400 text-white hover:bg-yellow-500">Edit</button>
+    </div>
+    <div id="fileKeteranganForm" class="mt-2 hidden"></div>
+    `;
+  }
+  function showKeteranganAndTable(htmlTable) {
+    previewDiv.innerHTML = htmlTable + keteranganEditor();
+  }
+  if (fileObj.file) {
+    if (ext === "csv") {
+      let text = atob(fileObj.file.split(",")[1]);
+      let parsed = Papa.parse(text, {header:false});
+      showKeteranganAndTable(renderTableWithComment(parsed.data, idx, submenu));
+    } else if (["xlsx","xls"].includes(ext)) {
+      let raw = fileObj.file.split(",")[1];
+      let data = Uint8Array.from(atob(raw), c=>c.charCodeAt(0));
+      let workbook = XLSX.read(data, {type:"array"});
+      let html = "";
+      workbook.SheetNames.forEach(function(sheetName) {
+        let ws = workbook.Sheets[sheetName];
+        let rows = XLSX.utils.sheet_to_json(ws, {header:1});
+        html += `<div class="font-bold mb-2">Sheet: ${sheetName}</div>`;
+        html += renderTableWithComment(rows, idx, submenu);
+      });
+      showKeteranganAndTable(html);
+    } else {
+      showKeteranganAndTable("<div class='text-red-500'>Preview hanya untuk file CSV/XLSX/XLS</div>");
+    }
+  } else if (fileObj.link && (ext === "csv" || ext === "xlsx" || ext === "xls")) {
+    fetch(fileObj.link)
+      .then(res => {
+        if (ext === "csv") return res.text();
+        else return res.arrayBuffer();
+      })
+      .then(data => {
+        if (ext === "csv") {
+          let parsed = Papa.parse(data, {header:false});
+          showKeteranganAndTable(renderTableWithComment(parsed.data, idx, submenu));
+        } else {
+          let workbook = XLSX.read(data, {type:"array"});
+          let html = "";
+          workbook.SheetNames.forEach(function(sheetName) {
+            let ws = workbook.Sheets[sheetName];
+            let rows = XLSX.utils.sheet_to_json(ws, {header:1});
+            html += `<div class="font-bold mb-2">Sheet: ${sheetName}</div>`;
+            html += renderTableWithComment(rows, idx, submenu);
+          });
+          showKeteranganAndTable(html);
+        }
+      })
+      .catch(()=>showKeteranganAndTable("<div class='text-red-500'>Tidak bisa preview file link (CORS/public saja).</div>"));
+  } else {
+    showKeteranganAndTable("<div class='text-red-500'>Preview hanya untuk file/link .csv, .xlsx, .xls</div>");
+  }
+}
+window.editFileKeterangan = function(submenu, idx) {
+  let keteranganKey = `statistik_keterangan_${submenu}_${idx}`;
+  let val = localStorage.getItem(keteranganKey)||"";
+  let form = document.getElementById('fileKeteranganForm');
+  form.classList.remove('hidden');
+  form.innerHTML = `
+    <form onsubmit="saveFileKeterangan('${submenu}',${idx},event)" class="flex gap-2 items-center">
+      <input type="text" class="border px-2 py-1 rounded flex-1" value="${val||''}" id="keteranganEditInput">
+      <button type="submit" class="px-3 py-1 rounded bg-blue-600 text-white">Simpan</button>
+      <button type="button" class="ml-2 px-2" onclick="this.parentNode.parentNode.classList.add('hidden')">&times;</button>
+    </form>
+  `;
+};
+window.saveFileKeterangan = function(submenu, idx, e) {
+  e.preventDefault();
+  let keteranganKey = `statistik_keterangan_${submenu}_${idx}`;
+  let val = document.getElementById('keteranganEditInput').value;
+  localStorage.setItem(keteranganKey, val);
+  previewTable(submenu, idx);
+};
+
+// ==== Komentar Statistik ====
+function renderTableWithComment(arr, fileIdx, submenu) {
+  if (!arr || arr.length === 0) return "<div class='text-gray-500'>File kosong.</div>";
+  let storageKey = `statistik_comments_${submenu}_${fileIdx}`;
+  let komentarData = JSON.parse(localStorage.getItem(storageKey)||'{}');
+  let html = `<div class='overflow-x-auto'><table class="w-full text-xs border bg-white my-2"><tbody>`;
+  arr.forEach((row,i) => {
+    html += `<tr>`;
+    row.forEach(cell => html += `<td class="border px-2 py-1">${cell||""}</td>`);
+    html += `<td class="border px-2 py-1">
+      <button class="text-blue-600 text-xs" onclick="showCommentInput('${submenu}',${fileIdx},${i})">Komentar</button>
+    </td>`;
+    html += `</tr>`;
+    if(komentarData[i] && komentarData[i].length) {
+      html += `<tr><td colspan="${row.length+1}" class="bg-blue-50 px-2 py-1 text-xs text-gray-700">`;
+      komentarData[i].forEach(k=>html+=`<div class="mb-1"><b>${k.user||'User'}:</b> ${k.text}</div>`);
+      html += `</td></tr>`;
+    }
+    html += `<tr id="comment-row-${submenu}-${fileIdx}-${i}" class="hidden"></tr>`;
+  });
+  html += "</tbody></table></div>";
+  return html;
+}
+window.showCommentInput = function(submenu, fileIdx, rowIdx) {
+  let key = `comment-row-${submenu}-${fileIdx}-${rowIdx}`;
+  let el = document.getElementById(key);
+  if(!el) return;
+  let html = `
+    <td colspan="99">
+      <form onsubmit="saveComment('${submenu}',${fileIdx},${rowIdx},event)" class="flex gap-2 items-center mt-2">
+        <input type="text" class="border px-2 py-1 rounded w-32" required placeholder="Nama" id="user-${submenu}-${fileIdx}-${rowIdx}">
+        <input type="text" class="border px-2 py-1 rounded flex-1" required placeholder="Tulis komentar..." id="comment-${submenu}-${fileIdx}-${rowIdx}">
+        <button class="px-3 py-1 rounded bg-blue-600 text-white" type="submit">Kirim</button>
+        <button type="button" class="ml-2 px-2" onclick="hideCommentInput('${submenu}',${fileIdx},${rowIdx})">&times;</button>
+      </form>
+    </td>`;
+  el.innerHTML = html;
+  el.classList.remove('hidden');
+}
+window.hideCommentInput = function(submenu, fileIdx, rowIdx) {
+  let key = `comment-row-${submenu}-${fileIdx}-${rowIdx}`;
+  let el = document.getElementById(key);
+  if(el) { el.innerHTML=''; el.classList.add('hidden'); }
+}
+window.saveComment = function(submenu, fileIdx, rowIdx, e) {
+  e.preventDefault();
+  let storageKey = `statistik_comments_${submenu}_${fileIdx}`;
+  let user = document.getElementById(`user-${submenu}-${fileIdx}-${rowIdx}`).value;
+  let text = document.getElementById(`comment-${submenu}-${fileIdx}-${rowIdx}`).value;
+  let komentarData = JSON.parse(localStorage.getItem(storageKey)||'{}');
+  komentarData[rowIdx] = komentarData[rowIdx]||[];
+  komentarData[rowIdx].push({user,text});
+  localStorage.setItem(storageKey, JSON.stringify(komentarData));
+  previewTable(submenu, fileIdx);
+}
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+document.getElementById('searchStatistik').addEventListener('input', function(){
+  renderSubmenuContent(currentSubmenu);
+});
+
+// --- PUBLIKASI & PEDOMAN (CRUD+file base64+localStorage) ---
+let publikasiDesa = JSON.parse(localStorage.getItem('publikasi_desa')||'[]');
+let publikasiPedoman = JSON.parse(localStorage.getItem('publikasi_pedoman')||'[]');
+let publikasiType = 'desa';
+let pubIdSeq = Number(localStorage.getItem('pubIdSeq')||1000);
+function getDataArr() { return publikasiType==='desa' ? publikasiDesa : publikasiPedoman; }
+function savePublikasi() {
+  localStorage.setItem('publikasi_desa',JSON.stringify(publikasiDesa));
+  localStorage.setItem('publikasi_pedoman',JSON.stringify(publikasiPedoman));
+  localStorage.setItem('pubIdSeq',pubIdSeq);
+}
+function renderListDesa() {
+  renderPublikasiList('desa','pubListDesa','keywordDesa','yearDesa');
+}
+function renderListPedoman() {
+  renderPublikasiList('pedoman','pubListPedoman','keywordPedoman','yearPedoman');
+}
+function renderPublikasiList(type, pubListId, keywordId, yearId) {
+  let arr = type==='desa' ? publikasiDesa : publikasiPedoman;
+  let filter = document.getElementById(keywordId).value.trim().toLowerCase();
+  let year = document.getElementById(yearId).value;
+  let filtered = arr.filter(pub => {
+    if(year && String(pub.year) !== year) return false;
+    if(filter && !(pub.title||"").toLowerCase().includes(filter) && !(pub.desc||"").toLowerCase().includes(filter)) return false;
+    return true;
+  });
+  filtered.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  let html = '';
+  if(filtered.length === 0) {
+    html = `<div class="text-center text-gray-500 py-8">Tidak ada data ditemukan</div>`;
+  } else {
+    html = filtered.map(pub => `
+    <article class="bg-white rounded-lg p-5 shadow-sm flex gap-5">
+      <div class="flex-shrink-0 w-[120px] h-[120px] rounded-md overflow-hidden shadow">
+        <img src="${pub.imgUrl || 'https://placehold.co/120x120?text=No+Image'}"
+          alt="${pub.title}" class="w-full h-full object-cover"
+          onerror="this.onerror=null;this.src='https://placehold.co/120x120?text=Image+Not+Available';" />
+      </div>
+      <div class="flex flex-col w-full">
+        <time datetime="${pub.date}" class="text-gray-500 text-xs flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z" />
+          </svg>
+          ${formatDate(pub.date)}
+        </time>
+        <h2>
+          <span class="text-blue-700 font-semibold text-lg hover:underline">${pub.title}</span>
+        </h2>
+        <div class="flex flex-wrap gap-2 mt-2 items-center">
+          <span class="inline-block text-xs bg-gray-200 rounded px-2 py-1 text-gray-700">Tahun: ${pub.year || '-'}</span>
+        </div>
+        <p class="text-gray-700 mt-1 text-sm leading-relaxed max-h-[80px] overflow-hidden">${pub.desc||''}</p>
+        <div class="flex gap-2 mt-3 flex-wrap">
+          ${pub.docUrl ? `
+            <a href="${pub.docUrl}" target="_blank" class="px-3 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700" download="${pub.docName || ''}">Unduh Dokumen</a>
+            <a href="${pub.docUrl}" target="_blank" class="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-700">Lihat Dokumen</a>
+          `: `<span class="px-3 py-1 bg-gray-300 text-gray-600 rounded text-xs">Belum ada dokumen</span>`}
+          <button onclick="openModal('${type}',${pub.id})" class="px-3 py-1 bg-yellow-400 text-white rounded text-xs hover:bg-yellow-500">Edit</button>
+          <button onclick="deletePub('${type}',${pub.id})" class="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600">Hapus</button>
+        </div>
+      </div>
+    </article>
+    `).join('');
+  }
+  document.getElementById(pubListId).innerHTML = html;
+}
+function openModal(type, id = null) {
+  publikasiType = type;
+  document.getElementById('modalPub').classList.remove('hidden');
+  document.getElementById('modalTitle').textContent = id ? 'Edit Data' : 'Tambah Data';
+  let arr = getDataArr();
+  let pub = arr.find(p=>p.id===id) || {};
+  document.getElementById('pubId').value = pub.id || '';
+  document.getElementById('pubTitle').value = pub.title || '';
+  document.getElementById('pubDate').value = pub.date || '';
+  document.getElementById('pubYear').value = pub.year || '';
+  document.getElementById('pubDesc').value = pub.desc || '';
+  document.getElementById('pubImg').value = '';
+  document.getElementById('previewImg').src = pub.imgUrl||'';
+  document.getElementById('previewImg').classList.toggle('hidden', !pub.imgUrl);
+  document.getElementById('pubDoc').value = '';
+  document.getElementById('docName').textContent = pub.docName||'';
+  document.getElementById('docName').title = pub.docName||'';
+  document.getElementById('pubForm').setAttribute('data-edit', id ? '1' : '');
+  document.getElementById('pubForm').setAttribute('data-edit-id', pub.id||'');
+  document.getElementById('pubForm').setAttribute('data-imgurl', pub.imgUrl||'');
+  document.getElementById('pubForm').setAttribute('data-docurl', pub.docUrl||'');
+  document.getElementById('pubForm').setAttribute('data-docname', pub.docName||'');
+  document.getElementById('errorMsg').textContent = "";
+}
+function closeModal() {
+  document.getElementById('modalPub').classList.add('hidden');
+  document.getElementById('pubForm').reset();
+  document.getElementById('previewImg').src = "";
+  document.getElementById('previewImg').classList.add('hidden');
+  document.getElementById('docName').textContent = "";
+  document.getElementById('docName').title = "";
+  document.getElementById('errorMsg').textContent = "";
+}
+document.getElementById('modalPub').onclick = function(e) {
+  if(e.target === this) closeModal();
+};
+document.getElementById('pubImg').onchange = function(e){
+  let file = this.files[0];
+  let preview = document.getElementById('previewImg');
+  if(file){
+    let reader = new FileReader();
+    reader.onload = function(ev){
+      preview.src = ev.target.result;
+      preview.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+    preview.classList.add('hidden');
+  }
+};
+document.getElementById('pubDoc').onchange = function(e){
+  let file = this.files[0];
+  let label = document.getElementById('docName');
+  if(file) {
+    label.textContent = file.name;
+    label.title = file.name;
+  } else {
+    label.textContent = "";
+    label.title = "";
+  }
+};
+document.getElementById('pubForm').onsubmit = async function(e){
+  e.preventDefault();
+  let arr = getDataArr();
+  let id = document.getElementById('pubId').value;
+  let obj = {
+    id: id ? Number(id) : ++pubIdSeq,
+    title: document.getElementById('pubTitle').value,
+    date: document.getElementById('pubDate').value,
+    year: document.getElementById('pubYear').value,
+    desc: document.getElementById('pubDesc').value,
+    imgUrl: '',
+    docUrl: '',
+    docName: ""
+  };
+  let tahunVal = obj.year;
+  if (!/^\d{4}$/.test(tahunVal)) {
+    document.getElementById('errorMsg').textContent = "Tahun harus 4 digit angka, misal: 2024";
+    document.getElementById('pubYear').focus();
+    return false;
+  }
+  let docFile = document.getElementById('pubDoc').files[0];
+  if(!docFile && !this.getAttribute('data-docurl')) {
+    document.getElementById('errorMsg').textContent = "Anda wajib mengunggah dokumen publikasi (.pdf, .doc, .xls, .zip)";
+    document.getElementById('pubDoc').focus();
+    return false;
+  }
+  let imgFile = document.getElementById('pubImg').files[0];
+  if(imgFile){
+    obj.imgUrl = await toBase64(imgFile);
+  } else if (this.getAttribute('data-edit')) {
+    obj.imgUrl = this.getAttribute('data-imgurl');
+  }
+  if(docFile){
+    obj.docName = docFile.name;
+    obj.docUrl = await toBase64(docFile);
+  } else if (this.getAttribute('data-edit')) {
+    obj.docUrl = this.getAttribute('data-docurl');
+    obj.docName = this.getAttribute('data-docname');
+  }
+  if(id) {
+    let idx = arr.findIndex(p=>p.id===Number(id));
+    if(idx>=0) arr[idx] = obj;
+  } else {
+    arr.push(obj);
+  }
+  savePublikasi();
+  if(publikasiType==='desa') renderListDesa();
+  else renderListPedoman();
+  closeModal();
+};
+window.openModal = openModal;
+window.deletePub = function(type, id) {
+  let arr = type==='desa' ? publikasiDesa : publikasiPedoman;
+  if(confirm("Yakin ingin menghapus data ini?")) {
+    let idx = arr.findIndex(p=>p.id===id);
+    if(idx>=0) arr.splice(idx,1);
+    savePublikasi();
+    if(type==='desa') renderListDesa();
+    else renderListPedoman();
+  }
+};
+// Init
+document.getElementById('keywordDesa').addEventListener('input', renderListDesa);
+document.getElementById('yearDesa').addEventListener('input', renderListDesa);
+document.getElementById('keywordPedoman').addEventListener('input', renderListPedoman);
+document.getElementById('yearPedoman').addEventListener('input', renderListPedoman);
+
+function formatDate(dateStr) {
+  if(!dateStr) return '';
+  const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  let d = new Date(dateStr);
+  if(isNaN(d.getTime())) return dateStr;
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+showSection('home');
+</script>
+</body>
+</html>
